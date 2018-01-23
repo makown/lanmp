@@ -1,0 +1,21 @@
+version: '2'
+services:
+  nginx:
+    image: registry.cn-shenzhen.aliyuncs.com/whb/nginx:1.12_1
+    ports:
+      - "80:80"
+    volumes:
+      - ./app/www/:/var/www/html/:rw
+      - ./app/conf/nginx/conf.d:/vhost/:ro
+      - ./app/log/nginx/:/logs:rw
+
+
+  fpm:
+    image: registry.cn-shenzhen.aliyuncs.com/whb/php:56_common
+    expose:
+      - "9000"
+    volumes:
+      - ./app/www/:/var/www/html/:rw
+      - ./app/conf/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./app/conf/php/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf:rw
+      - ./app/log/php-fpm/:/var/log/php-fpm/:rw

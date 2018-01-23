@@ -1,0 +1,42 @@
+nginx 与PHP 要分离需要共享文件夹来实现
+
+server
+    {
+        listen 80;
+        server_name whb.73go.cn;
+        index index.html index.htm index.php;
+        root   /data/whb;
+
+        include enable-php.conf;
+
+        location /nginx_status
+        {
+            stub_status on;
+            access_log   off;
+        }
+        location /api/ {
+                 proxy_pass   http://www.baidu.com;
+                 include proxy.conf
+             }
+
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+        {
+            expires      30d;
+        }
+
+        location ~ .*\.(js|css)?$
+        {
+            expires      12h;
+        }
+
+        location ~ /.well-known {
+            allow all;
+        }
+
+        location ~ /\.
+        {
+            deny all;
+        }
+
+        access_log  /logs/access-whb.log;
+    }
