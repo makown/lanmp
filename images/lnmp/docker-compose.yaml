@@ -19,3 +19,27 @@ services:
       - ./app/conf/php/php.ini:/usr/local/etc/php/php.ini:ro
       - ./app/conf/php/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf:rw
       - ./app/log/php-fpm/:/var/log/php-fpm/:rw
+
+  mysql:
+    image: registry.cn-shenzhen.aliyuncs.com/epipe/mysql:5.6
+    ports:
+      - '3306:3306'
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: abcd1234*
+    volumes:
+      - ./app/mysql/:/var/lib/mysql
+
+  redis:
+    image: registry.cn-shenzhen.aliyuncs.com/epipe/redis
+    ports:
+      - '6379:6379'
+    restart: always
+    command: redis-server  --requirepass epipe2017
+    volumes:
+      - ./app/redis/data:/data
+
+networks:
+  default:
+    external:
+      name: whb
